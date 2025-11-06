@@ -16,7 +16,7 @@ def validate_source_file(execution_date, ti=None):
             # try date string YYYYMMDD
             execution_date = datetime.strptime(execution_date, '%Y%m%d')
     expected_date = execution_date.strftime('%Y%m%d')
-    expected_filename = f"network_metrics_{expected_date}.csv\"
+    expected_filename = f"network_metrics_{expected_date}.csv"
     logging.info(f\"Checking for {expected_filename} in bucket {CONFIG['source_bucket']}\")
     if not s3_hook.check_for_key(expected_filename, bucket_name=CONFIG['source_bucket']):
         raise AirflowException(f\"File not found: {expected_filename}\")
