@@ -1,8 +1,8 @@
 import logging, io
 import pandas as pd
 from airflow.exceptions import AirflowException
-from scripts.utils import get_s3_hook, upload_bytes_to_s3
-from config.settings import CONFIG
+from utils import get_s3_hook, upload_bytes_to_s3
+from settings import CONFIG
 from datetime import datetime
 
 def create_gold_aggregations(processing_date, ti=None):
