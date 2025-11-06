@@ -9,13 +9,13 @@ REQUIRED_COLS = ['tower_id', 'region', 'timestamp', 'signal_strength', 'data_vol
 
 def clean_and_write_silver(processing_date, ti=None):
     s3_hook = get_s3_hook(CONFIG['s3_conn_id'])
-    bronze_key = f\"bronze/network_metrics/processing_date={processing_date}/network_data.parquet\"
+    bronze_key = f"bronze/network_metrics/processing_date={processing_date}/network_data.parquet"
     try:
         raw_bytes = s3_hook.read_key(bronze_key, bucket_name=CONFIG['target_bucket'])
         raw_buf = io.BytesIO(raw_bytes.encode() if isinstance(raw_bytes, str) else raw_bytes)
         df = pd.read_parquet(raw_buf)
     except Exception as e:
-        logging.error(f\"Failed reading bronze parquet: {e}\")
+        logging.error(f"Failed reading bronze parquet: {e}")
         raise AirflowException(str(e))
     initial_count = len(df)
     # Type coercion
@@ -42,7 +42,7 @@ def clean_and_write_silver(processing_date, ti=None):
     # Remove duplicates
     dup_count = df_clean.duplicated(subset=['tower_id', 'timestamp']).sum()
     if dup_count > 0:
-        logging.warning(f\"Found {dup_count} duplicates. Dropping.\")
+        logging.warning(f"Found {dup_count} duplicates. Dropping.")
         df_clean = df_clean.drop_duplicates(subset=['tower_id', 'timestamp'])
     final_count = len(df_clean)
     dq_report['initial_count'] = int(initial_count)
@@ -52,11 +52,11 @@ def clean_and_write_silver(processing_date, ti=None):
     out_buf = io.BytesIO()
     df_clean.to_parquet(out_buf, index=False)
     out_buf.seek(0)
-    silver_key = f\"silver/network_metrics/date={processing_date}/cleaned_data.parquet\"
+    silver_key = f"silver/network_metrics/date={processing_date}/cleaned_data.parquet"
     upload_bytes_to_s3(s3_hook, out_buf.getvalue(), silver_key, CONFIG['target_bucket'], replace=True)
     if ti:
         ti.xcom_push(key='silver_path', value=silver_key)
         ti.xcom_push(key='dq_report', value=dq_report)
         ti.xcom_push(key='silver_record_count', value=final_count)
-    logging.info(f\"Silver write complete: {silver_key} (records={final_count})\")
+    logging.info(f"Silver write complete: {silver_key} (records={final_count})")
     return silver_key
