@@ -17,13 +17,13 @@ def validate_source_file(execution_date, ti=None):
             execution_date = datetime.strptime(execution_date, '%Y%m%d')
     expected_date = execution_date.strftime('%Y%m%d')
     expected_filename = f"network_metrics_{expected_date}.csv"
-    logging.info(f\"Checking for {expected_filename} in bucket {CONFIG['source_bucket']}\")
+    logging.info(f"Checking for {expected_filename} in bucket {CONFIG['source_bucket']}")
     if not s3_hook.check_for_key(expected_filename, bucket_name=CONFIG['source_bucket']):
-        raise AirflowException(f\"File not found: {expected_filename}\")
+        raise AirflowException(f"File not found: {expected_filename}")
     # check size > 0
     key = s3_hook.get_key(expected_filename, bucket_name=CONFIG['source_bucket'])
     if getattr(key, 'content_length', 0) == 0:
-        raise AirflowException(f\"File is empty: {expected_filename}\")
+        raise AirflowException(f"File is empty: {expected_filename}")
     # push to xcom if provided
     if ti:
         ti.xcom_push(key='source_file', value=expected_filename)
@@ -38,7 +38,7 @@ def ingest_to_bronze(source_file, processing_date, ti=None):
         csv_content = s3_hook.read_key(source_file, bucket_name=CONFIG['source_bucket'])
         df = pd.read_csv(io.StringIO(csv_content))
     except Exception as e:
-        logging.error(f\"Failed reading source CSV: {e}\")
+        logging.error(f"Failed reading source CSV: {e}")
         raise AirflowException(str(e))
     # Add metadata
     df['ingestion_timestamp'] = datetime.utcnow()
@@ -48,10 +48,10 @@ def ingest_to_bronze(source_file, processing_date, ti=None):
     out_buffer = io.BytesIO()
     df.to_parquet(out_buffer, index=False)
     out_buffer.seek(0)
-    bronze_key = f\"bronze/network_metrics/processing_date={processing_date}/network_data.parquet\"
+    bronze_key = f"bronze/network_metrics/processing_date={processing_date}/network_data.parquet"
     upload_bytes_to_s3(s3_hook, out_buffer.getvalue(), bronze_key, CONFIG['target_bucket'], replace=True)
     if ti:
         ti.xcom_push(key='bronze_path', value=bronze_key)
         ti.xcom_push(key='bronze_record_count', value=len(df))
-    logging.info(f\"Bronze write complete: {bronze_key} (records={len(df)})\")
+    logging.info(f"Bronze write complete: {bronze_key} (records={len(df)})")
     return bronze_key
