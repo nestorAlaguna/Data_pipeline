@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from airflow import DAG
-from from airflow.providers.standard.operators.python.PythonOperator import PythonOperator
+from from airflow.providers.standard.operators.python import PythonOperator
 from extract import validate_source_file, ingest_to_bronze
 from transform import clean_and_write_silver
 from load import create_gold_aggregations
