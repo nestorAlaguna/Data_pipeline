@@ -46,5 +46,5 @@ def create_gold_aggregations(processing_date, ti=None):
     if ti:
         ti.xcom_push(key='gold_hourly_path', value=hourly_key)
         ti.xcom_push(key='gold_daily_path', value=daily_key)
-    logging.info(f\"Gold write complete: {hourly_key}, {daily_key}\")
+    logging.info(f"Gold write complete: {hourly_key}, {daily_key}")
     return hourly_key, daily_key
