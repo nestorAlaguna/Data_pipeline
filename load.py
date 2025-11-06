@@ -7,13 +7,13 @@ from datetime import datetime
 
 def create_gold_aggregations(processing_date, ti=None):
     s3_hook = get_s3_hook(CONFIG['s3_conn_id'])
-    silver_key = f\"silver/network_metrics/date={processing_date}/cleaned_data.parquet\"
+    silver_key = f"silver/network_metrics/date={processing_date}/cleaned_data.parquet"
     try:
         silver_bytes = s3_hook.read_key(silver_key, bucket_name=CONFIG['target_bucket'])
         silver_buf = io.BytesIO(silver_bytes.encode() if isinstance(silver_bytes, str) else silver_bytes)
         df = pd.read_parquet(silver_buf)
     except Exception as e:
-        logging.error(f\"Failed reading silver parquet: {e}\")
+        logging.error(f"Failed reading silver parquet: {e}")
         raise AirflowException(str(e))
     # Hourly aggregation
     hourly = df.groupby(['date','hour','region']).agg(
@@ -36,12 +36,12 @@ def create_gold_aggregations(processing_date, ti=None):
     hourly_buf = io.BytesIO()
     hourly.to_parquet(hourly_buf, index=False)
     hourly_buf.seek(0)
-    hourly_key = f\"gold/hourly_metrics/date={processing_date}/hourly_aggregations.parquet\"
+    hourly_key = f"gold/hourly_metrics/date={processing_date}/hourly_aggregations.parquet"
     upload_bytes_to_s3(s3_hook, hourly_buf.getvalue(), hourly_key, CONFIG['target_bucket'], replace=True)
     daily_buf = io.BytesIO()
     daily.to_parquet(daily_buf, index=False)
     daily_buf.seek(0)
-    daily_key = f\"gold/daily_summary/date={processing_date}/daily_aggregations.parquet\"
+    daily_key = f"gold/daily_summary/date={processing_date}/daily_aggregations.parquet"
     upload_bytes_to_s3(s3_hook, daily_buf.getvalue(), daily_key, CONFIG['target_bucket'], replace=True)
     if ti:
         ti.xcom_push(key='gold_hourly_path', value=hourly_key)
