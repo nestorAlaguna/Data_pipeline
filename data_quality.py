@@ -1,7 +1,7 @@
 import logging
 import pandas as pd
 import numpy as np
-from .utils import now_iso
+from utils import now_iso
 
 def check_required_columns(df, required_cols):
     missing = [c for c in required_cols if c not in df.columns]
