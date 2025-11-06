@@ -1,9 +1,9 @@
 from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from scripts.extract import validate_source_file, ingest_to_bronze
-from scripts.transform import clean_and_write_silver
-from scripts.load import create_gold_aggregations
+from extract import validate_source_file, ingest_to_bronze
+from transform import clean_and_write_silver
+from load import create_gold_aggregations
 
 default_args = {
     'owner': 'telecom-data-team',
