@@ -1,4 +1,3 @@
-#extract.py
 import logging, io
 import pandas as pd
 from airflow.exceptions import AirflowException
@@ -7,7 +6,7 @@ from config.settings import CONFIG
 from scripts.utils import get_s3_hook, upload_bytes_to_s3
 
 def validate_source_file(execution_date, ti=None):
-    \"\"\"Ensure the expected file exists in source bucket and basic checks.\"\"\"
+    # Ensure the expected file exists in source bucket and basic checks.
     s3_hook = get_s3_hook(CONFIG['s3_conn_id'])
     # execution_date may be a string if passed from templated DAG; try parse if needed
     if isinstance(execution_date, str):
@@ -33,7 +32,7 @@ def validate_source_file(execution_date, ti=None):
     return expected_filename
 
 def ingest_to_bronze(source_file, processing_date, ti=None):
-    \"\"\"Read CSV from source bucket and write an immutable parquet to bronze path.\"\"\"
+    # Read CSV from source bucket and write an immutable parquet to bronze path.
     s3_hook = get_s3_hook(CONFIG['s3_conn_id'])
     try:
         csv_content = s3_hook.read_key(source_file, bucket_name=CONFIG['source_bucket'])
@@ -41,11 +40,11 @@ def ingest_to_bronze(source_file, processing_date, ti=None):
     except Exception as e:
         logging.error(f\"Failed reading source CSV: {e}\")
         raise AirflowException(str(e))
-    # add metadata
+    # Add metadata
     df['ingestion_timestamp'] = datetime.utcnow()
     df['source_file'] = source_file
     df['processing_date'] = processing_date
-    # write parquet bytes
+    # Write parquet bytes
     out_buffer = io.BytesIO()
     df.to_parquet(out_buffer, index=False)
     out_buffer.seek(0)

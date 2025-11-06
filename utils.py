@@ -1,4 +1,3 @@
-# utils.py
 import logging, io
 from datetime import datetime
 from airflow.providers.amazon.aws.hooks.s3 import S3Hook
