@@ -1,9 +1,9 @@
 import logging, io
 import pandas as pd
 from airflow.exceptions import AirflowException
-from scripts.utils import get_s3_hook, upload_bytes_to_s3
-from config.settings import CONFIG
-from scripts.data_quality import data_quality_summary
+from utils import get_s3_hook, upload_bytes_to_s3
+from settings import CONFIG
+from data_quality import data_quality_summary
 
 REQUIRED_COLS = ['tower_id', 'region', 'timestamp', 'signal_strength', 'data_volume_mb']
 
