@@ -2,8 +2,8 @@ import logging, io
 import pandas as pd
 from airflow.exceptions import AirflowException
 from datetime import datetime
-from config.settings import CONFIG
-from scripts.utils import get_s3_hook, upload_bytes_to_s3
+from settings import CONFIG
+from utils import get_s3_hook, upload_bytes_to_s3
 
 def validate_source_file(execution_date, ti=None):
     # Ensure the expected file exists in source bucket and basic checks.
