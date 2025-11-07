@@ -1,7 +1,7 @@
 # Telecom Network Metrics Pipeline
 
 ## Overview
-This project simulates an **end-to-end ETL data pipeline** for a telecom company collecting daily tower performance metrics. It ingests raw CSVs, validates them, performs transformations, applies data quality checks, and generates aggregated business summaries.
+This project simulates an **end-to-end data pipeline** for a telecom company collecting daily tower performance metrics. It ingests raw CSVs, validates them, performs transformations, applies data quality checks, and generates aggregated business summaries.
 
 The data is processed in three layers (Bronze → Silver → Gold) following the **Medallion architecture**, orchestrated using **Apache Airflow**, processed with **Python/Pandas**, and stored as **Parquet** for efficient analytics.
 
