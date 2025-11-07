@@ -24,7 +24,7 @@ with DAG(
     dag_id='telecom_network_pipeline_modular',
     default_args=default_args,
     start_date=datetime(2025, 7, 1),
-    schedule='0 2 * * *',        # <- use `schedule` instead of schedule_interval
+    schedule='0 2 * * *',        # <- use schedule" instead of schedule_interval
     catchup=False,
     max_active_runs=1,
     on_failure_callback=dag_failure_alert
