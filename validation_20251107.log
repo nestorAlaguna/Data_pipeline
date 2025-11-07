@@ -1,0 +1,27 @@
+2025-11-07 02:00:01 [INFO] Starting validation for file: network_metrics_20251107.csv
+2025-11-07 02:00:02 [INFO] File exists in S3 bucket: raw-telecom-network-data
+2025-11-07 02:00:03 [INFO] File size: 520 bytes
+2025-11-07 02:00:03 [INFO] Filename pattern validated: network_metrics_20251107.csv
+2025-11-07 02:00:04 [INFO] File validation successful
+
+2025-11-07 02:10:10 [INFO] Reading raw CSV into Bronze layer
+2025-11-07 02:10:11 [INFO] Bronze ingestion complete. Records: 13
+2025-11-07 02:10:12 [INFO] Bronze data saved to s3://processed-telecom-data/bronze/network_metrics/processing_date=2025-11-07/network_data.parquet
+
+2025-11-07 02:15:05 [INFO] Starting Silver data cleaning
+2025-11-07 02:15:06 [WARN] Duplicate rows found: 3; removing duplicates
+2025-11-07 02:15:07 [INFO] Converted Unix timestamps to datetime
+2025-11-07 02:15:08 [INFO] Normalized region names to uppercase
+2025-11-07 02:15:09 [WARN] Found missing or invalid values in 0 rows; dropped
+2025-11-07 02:15:10 [INFO] Silver ingestion complete. Records: 10
+2025-11-07 02:15:11 [INFO] Data quality score: 76.9%
+2025-11-07 02:15:12 [INFO] Silver data saved to s3://processed-telecom-data/silver/network_metrics/date=2025-11-07/cleaned_data.parquet
+
+2025-11-07 02:20:00 [INFO] Starting Gold aggregations
+2025-11-07 02:20:05 [INFO] Hourly aggregations created (total regions: 5)
+2025-11-07 02:20:07 [INFO] Daily summary aggregations created
+2025-11-07 02:20:08 [INFO] Gold data saved to:
+           - s3://processed-telecom-data/gold/hourly_metrics/date=2025-11-07/hourly_aggregations.parquet
+           - s3://processed-telecom-data/gold/daily_summary/date=2025-11-07/daily_aggregations.parquet
+
+2025-11-07 02:20:10 [INFO] Validation & aggregation pipeline completed successfully
