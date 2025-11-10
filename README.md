@@ -71,7 +71,7 @@ Using Parquet makes downstream queries (e.g., daily KPIs) faster and cheaper, es
 | **Null check** | Detect missing values | "df.dropna()" + warning log |
 | **Duplicate check** | Remove redundant entries | "df.drop_duplicates()" |
 | **Freshness check** | Ensure data not stale | Compare latest timestamp vs current date |
-| **Anomaly detection** | Detect spikes in metrics | 3σ rule on "signal_strength" and "data_volume_mb" |
+
 
 Each check logs structured output (with timestamps), and **raises an exception** if a critical failure occurs (e.g., missing file or wrong schema).
 
