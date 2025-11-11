@@ -69,7 +69,6 @@ Using Parquet makes downstream queries (e.g., daily KPIs) faster and cheaper, es
 | **File-level check** | Ensure daily CSV exists and is readable | Check file presence in S3 bucket |
 | **Schema validation** | Confirm expected columns & dtypes | Compare Pandas schema |
 | **Null check** | Detect missing values | "df.dropna()" + warning log |
-| **Duplicate check** | Remove redundant entries | "df.drop_duplicates()" |
 | **Freshness check** | Ensure data not stale | Compare latest timestamp vs current date |
 
 
